@@ -28,6 +28,8 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         // カスタムセルを登録する
         let nib = UINib(nibName: "PostTableViewCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "Cell")
+        
+        
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -75,9 +77,13 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! PostTableViewCell
         cell.setPostData(postArray[indexPath.row])
         
-        // セル内のボタンのアクションをソースコードで設定する
+        // セル内のいいねボタンのアクションをソースコードで設定する
         cell.likeButton.addTarget(self, action:#selector(handleButton(_:forEvent:)), for: .touchUpInside)
 
+       // ***セル内のsendボタンのアクションをソースコードで設定する***
+        cell.sendButton.addTarget(self, action: #selector(sendehandleButton(_:forEvent:)), for: .touchUpInside)
+        
+        
         return cell
     }
     
@@ -106,7 +112,55 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }
             // likesに更新データを書き込む
             let postRef = Firestore.firestore().collection(Const.PostPath).document(postData.id)
+              //Firestoreの格納場所を指定して
             postRef.updateData(["likes": updateValue])
+              //likesの内容を更新している
+              //PostViewでも配列形式で格納している
         }
     }
+        
+    // ***セル内の投稿ボタンがタップされた時に呼ばれるメソッド***
+    @objc func sendehandleButton(_ sender: UIButton, forEvent event: UIEvent) {
+        print("DEBUG_PRINT: 投稿ボタンがタップされました。")
+        // タップされたセルのインデックスを求める
+        let touch = event.allTouches?.first
+        let point = touch!.location(in: self.tableView)
+        let indexPath = tableView.indexPathForRow(at: point)
+        
+        let cell = tableView.cellForRow(at: indexPath!) as! PostTableViewCell
+        let comment = cell.commentTextFeild.text!
+        
+        // 配列からタップされたインデックスのデータを取り出す
+        let postData = postArray[indexPath!.row]
+        
+        
+        
+        //コメント欄にセットするコメント
+        let setcomment = "\(postData.name!) : \(comment)"
+ 
+        // commentを更新する
+            // 更新データを作成する
+            //name+commentをセットしたい
+        var updatecommentValue : FieldValue
+        updatecommentValue = FieldValue.arrayUnion([setcomment])
+
+
+        // commentに更新データを書き込む
+              //Firestoreの格納場所を指定して
+        let postcommentRef = Firestore.firestore().collection(Const.PostPath).document(postData.id)
+              //likesの内容を更新している
+              //PostViewでも配列形式で格納している
+        postcommentRef.updateData(["comment": updatecommentValue])
+
+        
+        
+
+
+      }
+        
+        
+    
+    
+    
+    
 }

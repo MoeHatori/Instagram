@@ -18,7 +18,12 @@ class PostTableViewCell: UITableViewCell {
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var captionLabel: UILabel!
     
+    //コメント用の宣言
+    @IBOutlet weak var commentLabel: UILabel!
+    @IBOutlet weak var sendButton: UIButton!
+    @IBOutlet weak var commentTextFeild: UITextField!
     
+
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -30,6 +35,7 @@ class PostTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
+    
     
     // PostDataの内容をセルに表示
     func setPostData(_ postData: PostData) {
@@ -62,9 +68,12 @@ class PostTableViewCell: UITableViewCell {
             let buttonImage = UIImage(named: "like_none")
             self.likeButton.setImage(buttonImage, for: .normal)
         }
+        
+        //　***コメントの表示***
+        self.commentLabel.text = "\(postData.comment)"
+        
+        
     }
-    
-    
     
     
     

@@ -54,7 +54,8 @@ class PostViewController: UIViewController {
                 "caption": self.textField.text!,
                 "date": FieldValue.serverTimestamp(),
                 ] as [String : Any]
-            postRef.setData(postDic)
+            postRef.setData(postDic) //辞書を設定して書き込みしている
+            
             // HUDで投稿完了を表示する
             SVProgressHUD.showSuccess(withStatus: "投稿しました")
             // 投稿処理が完了したので先頭画面に戻る
