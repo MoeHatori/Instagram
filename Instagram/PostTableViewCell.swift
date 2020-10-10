@@ -70,8 +70,9 @@ class PostTableViewCell: UITableViewCell {
         }
         
         //　***コメントの表示***
-        self.commentLabel.text = "\(postData.comment)"
         
+        let commentSum = postData.comment.joined(separator: "\n") //配列を結合して改行を入れる
+        self.commentLabel.text = commentSum
         
     }
     

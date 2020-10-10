@@ -130,28 +130,30 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let cell = tableView.cellForRow(at: indexPath!) as! PostTableViewCell
         let comment = cell.commentTextFeild.text!
         
+        let name = Auth.auth().currentUser?.displayName
+        
         // 配列からタップされたインデックスのデータを取り出す
         let postData = postArray[indexPath!.row]
         
+        if comment.count != 0 {
+            //コメント欄にセットするコメント
+            let setcomment = "\(name!) : \(comment)"
+            
+            // commentを更新する
+               // 更新データを作成する
+               //name+commentをセットしたい
+            var updatecommentValue : FieldValue
+            updatecommentValue = FieldValue.arrayUnion([setcomment])
+
+            // commentに更新データを書き込む
+            let postcommentRef = Firestore.firestore().collection(Const.PostPath).document(postData.id)
+            postcommentRef.updateData(["comment": updatecommentValue])
+            
+            cell.commentTextFeild.text = ""
+            
+        }
         
         
-        //コメント欄にセットするコメント
-        let setcomment = "\(postData.name!) : \(comment)"
- 
-        // commentを更新する
-            // 更新データを作成する
-            //name+commentをセットしたい
-        var updatecommentValue : FieldValue
-        updatecommentValue = FieldValue.arrayUnion([setcomment])
-
-
-        // commentに更新データを書き込む
-              //Firestoreの格納場所を指定して
-        let postcommentRef = Firestore.firestore().collection(Const.PostPath).document(postData.id)
-              //likesの内容を更新している
-              //PostViewでも配列形式で格納している
-        postcommentRef.updateData(["comment": updatecommentValue])
-
         
         
 
